@@ -1,0 +1,136 @@
+All text outside function templates is treated as comments,
+i.e. it is just ignored by quicktemplate compiler (`qtc`). It is for humans.
+
+--------------------------------------------------------------------------------
+
+{% import "hash/fnv" %}
+{% import "fmt" %}
+{% import "time" %}
+
+{% code
+// arbitrary Go code may be embedded here!
+
+func hash(s string) string {
+	h := fnv.New32a()
+	h.Write([]byte(s))
+	return fmt.Sprint(h.Sum32()) +fmt.Sprint(time.Now().Nanosecond())
+}
+
+type PostmanSimplePayload struct {
+	Name               string
+	Description        string
+	RequestDirectories []struct {
+		Name     string
+		Requests []PostmanSimpleRequestMarkupDataV1
+	}
+}
+
+type PostmanSimpleRequestMarkupDataV1 struct {
+	Directory   string
+	Name        string
+	Description string
+	HTTPVerb    string
+	URL         string
+
+	QueryParams []PostmanSimpleRequestQueryParam
+	URLParams   []PostmanSimpleRequestURLParam
+
+	ExampleRequestBody string
+	Responses          []PostmanSimpleExampleResponse
+
+	CURL string
+}
+
+type PostmanSimpleExampleResponse struct {
+	Name         string
+	Code         int
+	Status       string
+	ResponseBody string
+}
+
+type PostmanSimpleRequestQueryParam struct {
+	Key         string
+	Description string
+	Sample      string
+	Type        string
+	Required    bool
+}
+
+type PostmanSimpleRequestURLParam struct {
+	Name        string
+	Description string
+	Sample      string
+	Type        string
+	Required    bool
+}
+
+%}
+
+{%- func MakePostmanSimple(p PostmanSimplePayload) -%}
+# {%s p.Name %} {{%s hash(p.Name) -%}}
+
+{%- if p.Description != "" -%}
+{%s p.Description -%}
+{%- endif %}
+
+
+{%- for _, dir := range p.RequestDirectories -%}
+## {%s dir.Name %} {{%s hash(dir.Name) %}}
+
+{%- for _, req := range dir.Requests -%}
+### {%s req.Name %} {{%s hash(req.Name) %}}
+
+| | |
+|--|--|
+|__Name__| {%s req.Name -%} |
+|__URL__| {%s req.URL %} |
+|__Method__| {%s req.HTTPVerb -%} |
+
+{%- if req.Description != "" -%}
+#### Description
+{%s req.Description -%}
+{%- endif %}
+
+#### Request
+{% if req.CURL != "" %}
+```sh
+{%s= req.CURL %}
+```
+{%- endif -%}
+
+{%- if len(req.QueryParams) != 0 -%}
+
+| Query Parameters | Value |
+|-----|-------|
+{%- for _, qp := range req.QueryParams -%}
+| <span style="color:green">{%s qp.Key -%}</span> {%s qp.Type %} {%- if qp.Required -%}`required`{%- endif -%} | {%s qp.Description %}|
+{%- endfor -%}
+{%- endif -%}
+
+{%- if len(req.URLParams) != 0 -%}
+| URL Params | Description |
+|-----|-------|
+{%- for _, up := range req.URLParams -%}
+| <span style="color:green">{%s up.Name %}</span> {%s up.Type %} {%- if up.Required -%}`required`{%- endif -%} | {%s up.Description %}|
+{%- endfor -%}
+{%- endif -%}
+
+{%- if len(req.Responses) != 0 -%}
+#### Response Examples
+
+{%- for i, resp := range req.Responses -%}
+##### Example {%d i + 1 -%}: {%s resp.Name %}
+
+```json
+Code: {%d resp.Code %} {%s= resp.Status %}
+------------------------------------------
+{%s= resp.ResponseBody %}
+```
+
+{%- endfor -%}
+{%- endif -%}
+
+{%- endfor -%}
+{%- endfor %}
+
+{%- endfunc -%}

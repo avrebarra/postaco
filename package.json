@@ -1,0 +1,28 @@
+{
+  "name": "postaco",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {},
+  "dependencies": {
+    "@types/jquery": "^3.5.4",
+    "@types/lodash": "^4.14.165",
+    "@types/showdown": "^1.9.3",
+    "axios": "^0.21.0",
+    "jquery": "^3.5.1",
+    "lodash": "^4.17.20",
+    "showdown": "^1.9.1",
+    "vue": "^2.6.12",
+    "vue-hot-reload-api": "^2.3.4"
+  },
+  "devDependencies": {
+    "@vue/component-compiler-utils": "^3.2.0",
+    "parcel-bundler": "^1.12.4",
+    "prettier": "^2.1.2",
+    "typescript": "^4.0.5",
+    "vue-template-compiler": "^2.6.12"
+  }
+}
