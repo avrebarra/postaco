@@ -23,14 +23,14 @@ jobs:
       - name: Setup yarn
         run: npm install -g yarn # Extra Step
 
-      - name: Setup dependencies
-        run: make setup
-
       - name: Set up Go 1.14
         uses: actions/setup-go@v2
         with:
           go-version: 1.14
         id: go
+
+      - name: Setup dependencies
+        run: cd /tmp && make setup && cd -
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@master
