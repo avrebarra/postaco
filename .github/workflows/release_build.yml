@@ -20,6 +20,8 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
+
+      - name: Setup yarn
         run: npm install -g yarn # Extra Step
 
       - name: Setup dependencies
