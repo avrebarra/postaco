@@ -2,9 +2,8 @@ name: release
 
 on:
   push:
-    branches:
-      - master
-
+    tags:
+      - "*"
 jobs:
   build:
     name: GoReleaser Build
