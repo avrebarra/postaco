@@ -30,7 +30,7 @@ jobs:
         id: go
 
       - name: Setup dependencies
-        run: cd /tmp && make setup && cd -
+        run: make setup
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@master
