@@ -6,9 +6,11 @@ watch-web:
 
 ## setup: setup project
 setup:
+	cd /tmp
 	go get -u github.com/valyala/quicktemplate/qtc
 	go get -u github.com/cosmtrek/air
 	go get -u github.com/go-bindata/go-bindata/...
+	cd -
 	yarn
 
 ## test: test project
