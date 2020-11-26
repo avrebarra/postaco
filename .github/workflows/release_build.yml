@@ -16,6 +16,15 @@ jobs:
         with:
           fetch-depth: 0 # See: https://goreleaser.com/ci/actions/
 
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+        run: npm install -g yarn # Extra Step
+
+      - name: Setup dependencies
+        run: make setup
+
       - name: Set up Go 1.14
         uses: actions/setup-go@v2
         with:

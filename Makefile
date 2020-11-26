@@ -4,8 +4,6 @@ PROJECTNAME := postaco
 watch-web:
 	parcel serve webapp/index.html -d tmp/.devweb
 
-
-
 ## setup: setup project
 setup:
 	go get -u github.com/valyala/quicktemplate/qtc
@@ -26,7 +24,7 @@ watch:
 	air -c .air/development.air.toml
 
 ## build: build binary
-build:
+build: setup
 	go generate .
 	go build -o dist/$(PROJECTNAME) main.go
 
