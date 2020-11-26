@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/avrebarra/postaco/docbuilder"
+	"github.com/avrebarra/postaco/docbuilder/postman"
 	"github.com/avrebarra/postaco/postaco"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -14,8 +14,6 @@ type ConfigCommandBuild struct {
 	Quiet      bool
 	SourcePath string `validate:"required,ne="`
 	OutputPath string `validate:"required,ne="`
-
-	PostmanDocBuilder docbuilder.DocBuilder `validate:"required"`
 }
 
 type CommandBuild struct {
@@ -42,7 +40,7 @@ func (c CommandBuild) Run() (err error) {
 		OutputPath:        c.config.OutputPath,
 		DocTitle:          "Postaco - Documentation Server",
 		Logger:            os.Stdout,
-		PostmanDocBuilder: c.config.PostmanDocBuilder,
+		PostmanDocBuilder: postman.New(postman.Config{}),
 	})
 
 	return nil

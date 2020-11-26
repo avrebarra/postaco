@@ -1,6 +1,10 @@
 package main
 
-import "github.com/avrebarra/postaco/cmd"
+import (
+	"fmt"
+
+	"github.com/avrebarra/postaco/cmd"
+)
 
 //go:generate qtc -dir=docbuilder/templates
 //go:generate parcel build webapp/index.html --no-source-maps --no-content-hash -d tmp/.buildweb
@@ -10,6 +14,6 @@ func main() {
 	cmd.Initialize()
 	err := cmd.Run()
 	if err != nil {
-		panic(err)
+		fmt.Println(err.Error())
 	}
 }

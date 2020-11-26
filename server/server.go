@@ -2,38 +2,32 @@ package server
 
 import (
 	"io"
-	"log"
 	"net/http"
 
-	"github.com/arl/statsviz"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gopkg.in/go-playground/validator.v9"
 )
 
 type ConfigServer struct {
-	Mode string
+	Path string `validate:"required"`
 }
 
 type Server struct {
-	ConfigServer `validate:"required,structonly"`
-	Router       http.Handler `validate:"required,structonly"`
+	config       ConfigServer
+	router       http.Handler
 	closerJaeger io.Closer
 }
 
 // NewServer creates new server instance
 func NewServer(cfg ConfigServer) (s Server) {
-	s = Server{
-		ConfigServer: cfg,
-		Router:       echo.New(),
-	}
-
-	// assert dependencies
-	if err := validator.New().Struct(s.ConfigServer); err != nil {
+	if err := validator.New().Struct(cfg); err != nil {
 		panic(err)
 	}
-	if err := validator.New().Struct(s); err != nil {
-		log.Fatal(err)
+
+	s = Server{
+		config: cfg,
+		router: echo.New(),
 	}
 
 	// setup router
@@ -43,32 +37,22 @@ func NewServer(cfg ConfigServer) (s Server) {
 }
 
 func (s *Server) SetupRouter() {
-	router := s.Router.(*echo.Echo)
+	router := s.router.(*echo.Echo)
 	router.Validator = &CustomValidator{Validator: validator.New()}
-	router.Static("/", ".")
 
-	// - development endpoints
-	if s.ConfigServer.Mode == "development" {
-		router.Any("/debug/statsviz/ws", echo.WrapHandler(http.HandlerFunc(statsviz.Ws)))
-		router.Any("/debug/statsviz//ws", echo.WrapHandler(http.HandlerFunc(statsviz.Ws)))
-		router.Any("/debug/statsviz/*", echo.WrapHandler(statsviz.Index))
-	}
+	router.Static("/", s.config.Path)
 
 	// Setup middlewares and add-ons
 	router.Use(middleware.RemoveTrailingSlash())
 	router.Use(middleware.RequestID())
-	if s.ConfigServer.Mode == "production" {
-		router.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{
-			DisablePrintStack: true,
-			DisableStackAll:   true,
-		}))
-	}
-
-	router.HTTPErrorHandler = ErrorHandler
+	router.Use(middleware.RecoverWithConfig(middleware.RecoverConfig{
+		DisablePrintStack: true,
+		DisableStackAll:   true,
+	}))
 }
 
 func (s *Server) GetHandler() http.Handler {
-	return s.Router
+	return s.router
 }
 
 func (s *Server) Close() error {

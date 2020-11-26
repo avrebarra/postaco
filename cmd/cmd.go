@@ -1,9 +1,9 @@
 package cmd
 
 import (
+	"fmt"
 	"path"
 
-	"github.com/avrebarra/postaco/docbuilder/postman"
 	"github.com/leaanthony/clir"
 )
 
@@ -17,20 +17,23 @@ func Initialize() {
 	cmd = clir.NewCli("postaco", "service", "v1")
 	// Command.SetBannerFunction(customBanner)
 
+	port := 8877
 	quiet := false
 	cmd.BoolFlag("quiet", "perform quiet operation", &quiet)
+	cmd.IntFlag("port", "port to bind (default: 8877)", &port)
 
 	// default cli action on no params / flag
 	cmd.Action(func() (err error) {
-		cmd.PrintHelp()
-		cmd := NewCommandBuild(ConfigCommandBuild{
-			Quiet:      quiet,
-			SourcePath: "tmp/collections",
-			OutputPath: "tmp/.devweb",
+		if len(cmd.OtherArgs()) == 0 {
+			err = fmt.Errorf("no path supplied")
+			return
+		}
 
-			PostmanDocBuilder: postman.New(postman.Config{}),
+		subcmd := NewCommandMain(ConfigCommandMain{
+			Port:       port,
+			SourcePath: cmd.OtherArgs()[0],
 		})
-		return cmd.Run()
+		return subcmd.Run()
 	})
 
 	cmdBuild := cmd.NewSubCommand("build", "build documentation folder")
@@ -43,33 +46,12 @@ func Initialize() {
 			srcclean := path.Clean(src)
 			outclean := path.Clean(out)
 
-			cmd := NewCommandBuild(ConfigCommandBuild{
+			subcmd := NewCommandBuild(ConfigCommandBuild{
 				Quiet:      quiet,
 				SourcePath: srcclean,
 				OutputPath: outclean,
-
-				PostmanDocBuilder: postman.New(postman.Config{}),
 			})
-			return cmd.Run()
-		})
-	}
-
-	cmdServer := cmd.NewSubCommand("server", "build and start documentation server")
-	{
-		port := 8877
-		mode := "production"
-		src := "."
-		out := "."
-		cmdServer.StringFlag("src", "source folder (default: current dir)", &src)
-		cmdServer.StringFlag("out", "output folder (default: current dir)", &out)
-		cmdServer.StringFlag("env", "environment to use [production|development] (default: production)", &mode)
-		cmdServer.IntFlag("port", "port to bind (default: 8877)", &port)
-		cmdServer.Action(func() (err error) {
-			cmd := NewCommandServe(ConfigCommandServe{
-				Port: port,
-				Mode: mode,
-			})
-			return cmd.Run()
+			return subcmd.Run()
 		})
 	}
 }
