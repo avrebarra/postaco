@@ -84,7 +84,7 @@ func (e *PostacoStruct) BuildDir(ctx context.Context, config ConfigBuildDir) (er
 			reldestsrc := filepath.Join("documents", relpath)
 			reldestmd := fsx.RemoveExtension(reldestsrc, typext[DoctypePostman]) + ".md" // change extension to md
 
-			// destsrc := filepath.Join(config.OutputPath, reldestsrc)
+			destsrc := filepath.Join(config.OutputPath, reldestsrc)
 			destmd := filepath.Join(config.OutputPath, reldestmd)
 
 			// build document
@@ -92,6 +92,13 @@ func (e *PostacoStruct) BuildDir(ctx context.Context, config ConfigBuildDir) (er
 			err = config.PostmanDocBuilder.Build(context.Background(), fpath, destmd, true)
 			if err != nil {
 				err = fmt.Errorf("postman document build failed: %w", err)
+				return
+			}
+
+			// copy source docfile
+			err = fsx.CopyFile(fpath, destsrc, 1000)
+			if err != nil {
+				err = fmt.Errorf("cannot copy source docfile: %w", err)
 				return
 			}
 

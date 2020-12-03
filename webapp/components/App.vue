@@ -42,6 +42,7 @@
 									</div>
 								</div>
 							</div>
+
 							<div class="accordion-item" id="listtoc">
 								<h2 class="accordion-header" id="flush-headingTwo">
 									<button
@@ -84,6 +85,39 @@
 													</template>
 												</dl>
 											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div class="accordion-item" id="toolkit">
+								<h2 class="accordion-header" id="flush-headingThree">
+									<button
+										class="accordion-button collapsed"
+										type="button"
+										data-toggle="collapse"
+										data-target="#flush-collapseThree"
+										aria-expanded="false"
+										aria-controls="flush-collapseThree"
+									>
+										Toolkit
+									</button>
+								</h2>
+								<div
+									id="flush-collapseThree"
+									class="accordion-collapse collapse"
+									aria-labelledby="flush-headingThree"
+									data-parent="#accordionFlushExample"
+								>
+									<div class="accordion-body">
+										<div class="collection">
+											<dl class="content list">
+												<dd class="toolkit item">
+													<a class="link-download-source" href="#">
+														Download Document Source
+													</a>
+												</dd>
+											</dl>
 										</div>
 									</div>
 								</div>
@@ -162,6 +196,10 @@ const load_document_by_index = async (idx: number) => {
 	await refresh_list_document();
 	await refresh_list_document_toc();
 	await refresh_content();
+
+	// set download link
+	const href = "/" + documentindex.srchref;
+	$("#toolkit .link-download-source").attr("href", href);
 };
 
 const fetch_docfile = async () => {
@@ -182,6 +220,7 @@ const refresh_list_document = async () => {
 				e.title.toLowerCase(), // hack to put foldered docs to bottom
 			name: e.title,
 			dochref: e.document_path_markdown,
+			srchref: e.document_path_source,
 		}))
 		.sort((a, b) => {
 			return a.ordering.toLowerCase().localeCompare(b.ordering.toLowerCase());
@@ -272,6 +311,10 @@ export default Vue.extend({
 	color: #fff !important;
 	background-color: #2d2d2d;
 	text-decoration: none;
+}
+
+.markdown-header {
+	margin-bottom: 1em;
 }
 
 .crunchify-top {
