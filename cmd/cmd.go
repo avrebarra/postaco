@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"path"
 
 	"github.com/leaanthony/clir"
@@ -14,26 +13,16 @@ func customBanner(cli *clir.Cli) string {
 }
 
 func Initialize() {
-	cmd = clir.NewCli("postaco", "service", "v1")
+	cmd = clir.NewCli("postaco", "postman collections as local documentation server", "v0")
 	// Command.SetBannerFunction(customBanner)
 
-	port := 8877
 	quiet := false
 	cmd.BoolFlag("quiet", "perform quiet operation", &quiet)
-	cmd.IntFlag("port", "port to bind (default: 8877)", &port)
 
 	// default cli action on no params / flag
 	cmd.Action(func() (err error) {
-		if len(cmd.OtherArgs()) == 0 {
-			err = fmt.Errorf("no path supplied")
-			return
-		}
-
-		subcmd := NewCommandMain(ConfigCommandMain{
-			Port:       port,
-			SourcePath: cmd.OtherArgs()[0],
-		})
-		return subcmd.Run()
+		cmd.PrintHelp()
+		return
 	})
 
 	cmdBuild := cmd.NewSubCommand("build", "build documentation folder")

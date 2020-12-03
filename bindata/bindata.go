@@ -182,7 +182,7 @@ func indexHtml() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "index.html", size: 1319, mode: os.FileMode(420), modTime: time.Unix(1606395000, 0)}
+	info := bindataFileInfo{name: "index.html", size: 1319, mode: os.FileMode(420), modTime: time.Unix(1606985538, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -202,7 +202,7 @@ func webapp77de5100Css() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "webapp.77de5100.css", size: 560, mode: os.FileMode(420), modTime: time.Unix(1606395000, 0)}
+	info := bindataFileInfo{name: "webapp.77de5100.css", size: 560, mode: os.FileMode(420), modTime: time.Unix(1606985538, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -222,7 +222,7 @@ func webapp77de5100Js() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "webapp.77de5100.js", size: 170264, mode: os.FileMode(420), modTime: time.Unix(1606395000, 0)}
+	info := bindataFileInfo{name: "webapp.77de5100.js", size: 170264, mode: os.FileMode(420), modTime: time.Unix(1606985538, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }

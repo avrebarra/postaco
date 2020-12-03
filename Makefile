@@ -6,14 +6,6 @@ PROJECTNAME := postaco
 watch-web:
 	parcel serve webapp/index.html -d tmp/.devweb
 
-## setup: setup project
-setup:
-	GO111MODULE=off go get github.com/valyala/quicktemplate/qtc
-	GO111MODULE=off go get github.com/cosmtrek/air
-	GO111MODULE=off go get github.com/go-bindata/go-bindata/...
-	go mod tidy
-	yarn
-
 # -------------------------------------------------
 
 ## test: test project

@@ -1,6 +1,6 @@
 <div class="info" align="center">
   <h1 class="name">📬<br>postaco</h1>
-  Convert postman collections to local documentation server
+  postman collections as local documentation server
   <br>
   <br>
 </div>
@@ -17,9 +17,6 @@ curl https://i.jpillora.com/avrebarra/postaco! | *remove_this* bash
 # install specific version
 curl https://i.jpillora.com/avrebarra/postaco@{version} | *remove_this* bash
 
-# start postaco
-postaco -help
-
 ```
 
 ## Usage
@@ -28,7 +25,7 @@ postaco -help
 ```bash
 $ postaco -help
 
-postaco v1 - service
+postaco v0 - postman collections as local documentation server
 
 Available commands:
 
@@ -38,8 +35,6 @@ Flags:
 
   -help
         Get help on the 'postaco' command.
-  -port int
-        port to bind (default: 8877) (default 8877)
   -quiet
         perform quiet operation
 ```
