@@ -103,7 +103,7 @@ func (e *PostacoStruct) BuildDir(ctx context.Context, config ConfigBuildDir) (er
 			}
 			headers := mkdon.ExtractHeaders(doccontent)
 
-			lastlv1 := DocumentIndex{}
+			firstlv1 := DocumentIndex{}
 			lastlv2 := DocumentIndex{}
 			lastlv3 := DocumentIndex{}
 
@@ -120,7 +120,10 @@ func (e *PostacoStruct) BuildDir(ctx context.Context, config ConfigBuildDir) (er
 
 				switch level {
 				case 1:
-					lastlv1 = DocumentIndex{
+					if firstlv1.Kind != "" {
+						break
+					}
+					firstlv1 = DocumentIndex{
 						Kind:                    "document/postman",
 						Title:                   title,
 						DocumentRelDir:          filepath.Dir(relpath),
@@ -129,13 +132,13 @@ func (e *PostacoStruct) BuildDir(ctx context.Context, config ConfigBuildDir) (er
 						Indexables:              []string{title},
 						Rel:                     tagclean,
 					}
-					doc.Document = append(doc.Document, lastlv1)
+					doc.Document = append(doc.Document, firstlv1)
 
 				case 2:
 					lastlv2 = DocumentIndex{
 						Kind:                    "bookmark/postman/dir",
 						Title:                   title,
-						DocumentRelDir:          lastlv1.DocumentRelPathMarkdown,
+						DocumentRelDir:          firstlv1.DocumentRelPathMarkdown,
 						DocumentRelPathSource:   "-",
 						DocumentRelPathMarkdown: reldestmd,
 						Indexables:              []string{title},
@@ -147,7 +150,7 @@ func (e *PostacoStruct) BuildDir(ctx context.Context, config ConfigBuildDir) (er
 					lastlv3 = DocumentIndex{
 						Kind:                    "bookmark/postman/request",
 						Title:                   title,
-						DocumentRelDir:          lastlv1.DocumentRelPathMarkdown,
+						DocumentRelDir:          firstlv1.DocumentRelPathMarkdown,
 						DocumentRelPathSource:   "-",
 						DocumentRelPathMarkdown: reldestmd,
 						Indexables:              []string{title},

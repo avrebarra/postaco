@@ -6,7 +6,7 @@ on:
       - "*"
 jobs:
   build:
-    name: GoReleaser Build
+    name: release
     runs-on: ubuntu-latest
 
     steps:

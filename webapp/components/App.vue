@@ -28,6 +28,7 @@
 										<div class="collection">
 											<dl class="content list">
 												<dd v-for="(c, i) in listDocument" v-bind:key="i">
+													{{ c.group }} -
 													<a
 														:href="c.href"
 														v-on:click="load_document_by_index(i)"
@@ -175,14 +176,11 @@ const refresh_list_document = async () => {
 	data.listDocument = idxdocuments
 		.filter((e) => e.kind.includes("document"))
 		.map((e) => ({
-			group: e.document_dir,
+			group: e.document_dir.substring(1),
 			ordering:
 				(e.document_dir.substring(1) ? "ZZZZZZZZZZ" : "") +
 				e.title.toLowerCase(), // hack to put foldered docs to bottom
-			name:
-				e.document_dir.substring(1) +
-				(e.document_dir.substring(1) ? " > " : "") +
-				e.title,
+			name: e.title,
 			dochref: e.document_path_markdown,
 		}))
 		.sort((a, b) => {
