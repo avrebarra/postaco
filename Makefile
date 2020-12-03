@@ -1,5 +1,7 @@
 PROJECTNAME := postaco
 
+# -------------------------------------------------
+
 ## watch-web: watch webapp build
 watch-web:
 	parcel serve webapp/index.html -d tmp/.devweb
@@ -13,6 +15,8 @@ setup:
 	cd -
 	yarn
 
+# -------------------------------------------------
+
 ## test: test project
 test:
 	go test ./... -coverprofile cp.out && go tool cover -func=cp.out
@@ -25,9 +29,9 @@ coverage:
 watch:
 	air -c .air/development.air.toml
 
-## build: build binary
-build: setup
-	go generate .
+## prebuild: build binary
+build:
+	go generate ./...
 	go build -o dist/$(PROJECTNAME) main.go
 
 .PHONY: help
